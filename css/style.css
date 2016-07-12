@@ -1,3 +1,20 @@
+h1, h3, h4 {
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+}
+h1{
+  font-size: 4em;
+  text-align: center;
+  padding: 20px;
+}
+h3 {
+  font-size: 2em;
+  margin: 20px;
+}
+h4 {
+  font-size: 1.5em;
+  margin: 10px;
+}
 .headerSection {
   width: 100%;
   height: 100px;
@@ -55,12 +72,12 @@
 .staticContainer {
   height: 150px;
   width: 150px;
-  margin: 20px auto;
+  margin: 15% auto;
 }
 .board {
   height: 270px;
   width: 270px;
-  margin: 5% auto;
+  margin: 10% auto;
 }
 .square {
   background: grey;

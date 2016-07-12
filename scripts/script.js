@@ -55,6 +55,7 @@ var Shape = function(){
   this.randShapeIndex = Math.floor(Math.random()*this.shapeColArr.length);
   this.genShape();
 };
+
 Shape.prototype.genShape = function(){
   this.shapeAttr = this.shapeColArr[this.randShapeIndex];
 };
@@ -65,11 +66,15 @@ $(document).ready(function(){
   var endingCoord = [];
   var diffCoords = [];
   var staticContainer = $('.staticContainer');
+  var defaultCol = '#ECF0F1';
+  var ttlRows = 10;
+  var ttlCols = 10;
+  var p1Score = 0;
 
   function prepareBoard(){
     //create board
-    for(var boardRow = 0; boardRow < 10; boardRow++){
-      for(var boardCol = 0; boardCol < 10; boardCol++){
+    for(var boardRow = 0; boardRow < ttlRows; boardRow++){
+      for(var boardCol = 0; boardCol < ttlCols; boardCol++){
         var boardSq = $('<div>').attr({class:'boardSquare droppable','data-xCoord':boardCol, "data-yCoord":boardRow});
         mainBoard.append(boardSq);
       }
@@ -114,7 +119,6 @@ $(document).ready(function(){
     });
     getStartingCoord();
   }
-
   //the coordinates of the clicked position on the board
   function getEndingCoord(obj){
     var x = obj.data("xcoord");
@@ -142,15 +146,60 @@ $(document).ready(function(){
         getDifference();
         var corrX = $(this).data('xcoord') + diffCoords[0];
         var corrY = $(this).data('ycoord') + diffCoords[1];
-        $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']').css("background-color",pcColor);
+        $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']').addClass('filled').css("background-color",pcColor);
       });
       ui.helper.remove();
       generateNewPiece();
+
+      //updates score if player completes row/col
+      var turnScore = horzFillCheck() + vertFillCheck();
+      if(turnScore > 0){
+        p1Score += turnScore
+        $('.player1').text("Score: " + p1Score);
+      }
     }
   });
+  //difference between the points
   function getDifference(){
     var diffX = endingCoord[0] - startingCoord[0];
     var diffY = endingCoord[1] - startingCoord[1];
     diffCoords = [diffX, diffY];
   }
+  //function to clear off all pieces in row/col
+  function clearCells(type, index){
+    if(type === "row"){
+      $('.boardSquare[data-ycoord='+index+']').animate({backgroundColor: defaultCol});
+    }else{
+      $('.boardSquare[data-xcoord='+index+']').animate({backgroundColor: defaultCol});
+    }
+  }
+  //checks for completed horizontal rows and returns completed row count
+  function horzFillCheck(){
+    var horzFillCount = 0;
+    for(var i = 0; i < ttlCols; i++){
+      var rowList = $('.boardSquare.filled[data-ycoord='+i+']');
+      var filledInRow = rowList.length;
+      if(filledInRow === 10){
+        rowList.removeClass('filled');
+        clearCells("row",i);
+        horzFillCount++;
+      }
+    }
+    return horzFillCount;
+  }
+  //checks for completed row count
+  function vertFillCheck(){
+    var vertFillCount = 0;
+    for(var i = 0; i < ttlRows; i++){
+      var colList = $('.boardSquare.filled[data-xcoord='+i+']');
+      var filledInCol = colList.length;
+      if(filledInCol === 10){
+        colList.removeClass('filled');
+        clearCells("col",i);
+        vertFillCount++;
+      }
+    }
+    return vertFillCount;
+  }
+  $('button').click(vertFillCheck);
 });
