@@ -1,0 +1,63 @@
+.headerSection {
+  width: 100%;
+  height: 100px;
+}
+.gameSection {
+  width: 100%;
+  height: 600px;
+}
+.game {
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+.pieceContainer {
+  height: 150px;
+  width: 150px;
+  margin: 20px auto;
+}
+.pcSquare {
+  display: inline-block;
+}
+.pcSquare.empty {
+  height: 25px;
+  width: 25px;
+  border-radius: 5px;
+  margin: 0.5px 1px;
+  visibility: hidden;
+}
+.pcSquare.filled {
+  height: 25px;
+  width: 25px;
+  margin: 0.5px 1px;
+  border-radius: 5px;
+}
+.boardSquare {
+  height: 25px;
+  width: 25px;
+  margin: 0.5px 1px;
+  border-radius: 5px;
+  background-color: #ECF0F1;
+  display:inline-block;
+}
+.player1Section {
+  width: 20%;
+  height: 100%;
+}
+.player2Section {
+  width: 20%;
+  height: 100%;
+}
+.boardSection {
+  width: 59.3%;
+  height: 100%;
+}
+.board {
+  height: 270px;
+  width: 270px;
+  margin: 5% auto;
+}
+.square {
+  background: grey;
+  height: 25px;
+}
