@@ -14,7 +14,7 @@
 .pieceContainer {
   height: 150px;
   width: 150px;
-  margin: 20px auto;
+  /*margin: 20px auto;*/
 }
 .pcSquare {
   display: inline-block;
@@ -51,6 +51,12 @@
 .boardSection {
   width: 59.3%;
   height: 100%;
+}
+.staticContainer {
+  height: 150px;
+  width: 150px;
+  /*background: blue;*/
+  margin: 20px auto;
 }
 .board {
   height: 270px;

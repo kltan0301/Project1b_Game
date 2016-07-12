@@ -65,8 +65,6 @@ $(document).ready(function(){
     var color = pieceAttr.color;
 
     for(var i = 0; i < pieceAttr.coord.length; i++){
-        // var xCoordinate = pieceAttr.coord[i][0] + pieceAttr.startPoint.x;
-        // var yCoordinate = pieceAttr.coord[i][1] + pieceAttr.startPoint.y;
         var xCoordinate = pieceAttr.coord[i][0];
         var yCoordinate = pieceAttr.coord[i][1];
         var square = pieceContainer.find('[data-xCoord=' + xCoordinate + '][data-yCoord=' + yCoordinate + ']');
@@ -84,7 +82,6 @@ $(document).ready(function(){
     $('.pcSquare').mousedown(function(){
       var x = $(this).data("xcoord");
       var y = $(this).data("ycoord");
-      console.log("startingCoordx: " + x + ", startingCoord-y: " + y);
       startingCoord = [x,y];
     });
   }
@@ -92,8 +89,7 @@ $(document).ready(function(){
   function getEndingCoord(obj){
     var x = obj.data("xcoord");
     var y = obj.data("ycoord");
-    obj.css("background","blue");
-    console.log("endingCoord-x: " + x + ", endingcoord-y: " + y);
+    // console.log("endingCoord-x: " + x + ", endingcoord-y: " + y);
     endingCoord = [x,y];
   }
   //prepare the board
@@ -105,12 +101,22 @@ $(document).ready(function(){
   $('.droppable').droppable({
     //when mouse pointer overlaps droppable element
     tolerance: "pointer",
+    revert: false,
     drop: function(event, ui){
+      //retrieve filled squares of piece
+      var piece = $('.pcSquare.filled');
+      var pcColor = piece.first().css('background-color');
+
       getEndingCoord($(this));
       getStartingCoord();
-      getDifference();
-      console.log("diffX: " + diffCoords[0] + ", diffY: " + diffCoords[1]);
-      // ui.helper.remove();
+      piece.each(function(){
+        // console.log($(this).data('xcoord') + ", " + $(this).data('ycoord'));
+        getDifference();
+        var corrX = $(this).data('xcoord') + diffCoords[0];
+        var corrY = $(this).data('ycoord') + diffCoords[1];
+        $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']').css("background-color",pcColor);
+      });
+      ui.helper.remove();
     }
   });
   function getDifference(){
