@@ -14,7 +14,6 @@
 .pieceContainer {
   height: 150px;
   width: 150px;
-  /*margin: 20px auto;*/
 }
 .pcSquare {
   display: inline-block;
@@ -24,6 +23,7 @@
   width: 25px;
   border-radius: 5px;
   margin: 0.5px 1px;
+  /*background: lightgrey;*/
   visibility: hidden;
 }
 .pcSquare.filled {
@@ -55,7 +55,6 @@
 .staticContainer {
   height: 150px;
   width: 150px;
-  /*background: blue;*/
   margin: 20px auto;
 }
 .board {
