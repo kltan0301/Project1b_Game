@@ -8,7 +8,7 @@ h1{
   padding: 20px;
 }
 h3 {
-  font-size: 2em;
+  font-size: 2.5em;
   margin: 20px;
 }
 h4 {
@@ -29,29 +29,33 @@ h4 {
   vertical-align: top;
 }
 .pieceContainer {
-  height: 150px;
-  width: 150px;
+  height: 100%;
+  width: 100%;
 }
 .pcSquare {
   display: inline-block;
 }
 .pcSquare.empty {
-  height: 25px;
-  width: 25px;
+  /*height: 25px;
+  width: 25px;*/
+  height: 18%;
+  width: 18%;
   border-radius: 5px;
   margin: 0.5px 1px;
   /*background: lightgrey;*/
   visibility: hidden;
 }
 .pcSquare.filled {
-  height: 25px;
-  width: 25px;
+  /*height: 25px;
+  width: 25px;*/
+  height: 18%;
+  width: 18%;
   margin: 0.5px 1px;
   border-radius: 5px;
 }
 .boardSquare {
-  height: 25px;
-  width: 25px;
+  height: 9.5%;
+  width: 9.5%;
   margin: 0.5px 1px;
   border-radius: 5px;
   background-color: #ECF0F1;
@@ -70,16 +74,16 @@ h4 {
   height: 100%;
 }
 .staticContainer {
-  height: 150px;
-  width: 150px;
+  height: 230px;
+  width: 230px;
   margin: 15% auto;
 }
 .board {
-  height: 270px;
-  width: 270px;
-  margin: 10% auto;
+  height: 450px;
+  width: 450px;
+  margin: 5% auto;
 }
-.square {
+/*.square {
   background: grey;
   height: 25px;
-}
+}*/

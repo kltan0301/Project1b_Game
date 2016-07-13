@@ -62,14 +62,15 @@ Shape.prototype.genShape = function(){
 $(document).ready(function(){
   // var pieceContainer = $('.pieceContainer');
   var mainBoard = $('.board');
-  var startingCoord = [];
-  var endingCoord = [];
-  var diffCoords = [];
+  var startingCoord = [0,0];
+  var endingCoord = [0,0];
+  var diffCoords = [0,0];
   var staticContainer = $('.staticContainer');
-  var defaultCol = '#ECF0F1';
+  var defaultCol = 'rgb(236, 240, 241)';
   var ttlRows = 10;
   var ttlCols = 10;
   var p1Score = 0;
+  var orgPosX, orgPosY;
 
   function prepareBoard(){
     //create board
@@ -79,6 +80,47 @@ $(document).ready(function(){
         mainBoard.append(boardSq);
       }
     }
+    //add droppable listener for the board squares
+    $('.droppable').droppable({
+      //when mouse pointer overlaps droppable element
+      tolerance: "pointer",
+      revert: false,
+      drop: function(event, ui){
+
+        //retrieve filled squares of piece
+        var piece = $('.pcSquare.filled');
+        var pcColor = piece.first().css('background-color');
+        //get ending coordinates
+        getEndingCoord($(this));
+
+        var clickedXCoord = endingCoord[0];
+        var clickedYCoord = endingCoord[1];
+        //check validity of move
+        getDifference();
+        var isValid = isValidMove(piece);
+
+        if(isValid){
+          piece.each(function(){
+            // color board squares based on piece squares
+            var corrX = $(this).data('xcoord') + diffCoords[0];
+            var corrY = $(this).data('ycoord') + diffCoords[1];
+
+            $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']').addClass('filled').css("background-color",pcColor);
+          });
+          ui.helper.remove();
+          generateNewPiece();
+
+          //updates score if player completes row/col
+          var turnScore = horzFillCheck() + vertFillCheck();
+          if(turnScore > 0){
+            p1Score += turnScore;
+            $('.player1').text("Score: " + p1Score);
+          }
+        }else{
+          $('.pieceContainer').css({left: 20, top: 30});
+        }
+      }
+    });
   }
   //the coordinates of the piece where the player clicked
   function getStartingCoord(){
@@ -105,8 +147,8 @@ $(document).ready(function(){
     }
     //color the squares based on the shape
     for(var i = 0; i < pieceAttr.coord.length; i++){
-        var xCoordinate = pieceAttr.coord[i][0] + pieceAttr.startPoint.x;
-        var yCoordinate = pieceAttr.coord[i][1] + pieceAttr.startPoint.y;
+        var xCoordinate = pieceAttr.coord[i][0];
+        var yCoordinate = pieceAttr.coord[i][1];
         var square = pieceContainer.find('[data-xCoord=' + xCoordinate + '][data-yCoord=' + yCoordinate + ']');
         square.css('background',color).attr('class','pcSquare filled');
     }
@@ -115,9 +157,12 @@ $(document).ready(function(){
     $('.draggable').draggable({
       cursor: 'move',
       // helper:'clone',
-      revert: false
+      revert: "invalid"
     });
+    //add mouse down listener to find out where coordinates player is clicking on the piece
     getStartingCoord();
+    orgPosX = $('.pieceContainer').offset().left;
+    orgPosY = $('.pieceContainer').offset().top;
   }
   //the coordinates of the clicked position on the board
   function getEndingCoord(obj){
@@ -125,40 +170,6 @@ $(document).ready(function(){
     var y = obj.data("ycoord");
     endingCoord = [x,y];
   }
-  //prepare the board
-  prepareBoard();
-  // generateNewPiece();
-  generateNewPiece();
-  //add droppable listener
-  $('.droppable').droppable({
-    //when mouse pointer overlaps droppable element
-    tolerance: "pointer",
-    revert: false,
-    drop: function(event, ui){
-      //retrieve filled squares of piece
-      var piece = $('.pcSquare.filled');
-      var pcColor = piece.first().css('background-color');
-
-      getEndingCoord($(this));
-
-      piece.each(function(){
-        // console.log($(this).data('xcoord') + ", " + $(this).data('ycoord'));
-        getDifference();
-        var corrX = $(this).data('xcoord') + diffCoords[0];
-        var corrY = $(this).data('ycoord') + diffCoords[1];
-        $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']').addClass('filled').css("background-color",pcColor);
-      });
-      ui.helper.remove();
-      generateNewPiece();
-
-      //updates score if player completes row/col
-      var turnScore = horzFillCheck() + vertFillCheck();
-      if(turnScore > 0){
-        p1Score += turnScore
-        $('.player1').text("Score: " + p1Score);
-      }
-    }
-  });
   //difference between the points
   function getDifference(){
     var diffX = endingCoord[0] - startingCoord[0];
@@ -201,5 +212,33 @@ $(document).ready(function(){
     }
     return vertFillCount;
   }
+  //check valid move
+  function isValidMove(pieceCoords){
+    var invalidCount = 0;
+
+    pieceCoords.each(function(){
+
+      var corrX = $(this).data('xcoord') + diffCoords[0];
+      var corrY = $(this).data('ycoord') + diffCoords[1];
+
+      var boardSq = $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord='+corrY+']');
+
+      if(boardSq.css('background-color') !== defaultCol){
+        invalidCount++;
+      }
+    });
+    if(invalidCount > 0){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  //prepare the board
+  prepareBoard();
+  // generateNewPiece() for first play;
+  generateNewPiece();
+
+  //button for testing, remember to remove
   $('button').click(vertFillCheck);
 });
