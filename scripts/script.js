@@ -191,13 +191,14 @@ $(document).ready(function() {
               $('.player2').text("Score: " + p2Score);
             }
           }
+          switchTurn();
         } else {
           $('.pieceContainer').css({
             left: 20,
             top: 30
           });
         }
-        switchTurn();
+
         console.log("curr turn: " + currPlayer);
       }
     });
@@ -391,10 +392,7 @@ $(document).ready(function() {
       });
     }
   }
-
-  function checkExitCommand() {
-
-  }
+  //check if it's the first round
   var firstTurn = true;
   //create new startscreen
   function startGame() {
@@ -438,19 +436,12 @@ $(document).ready(function() {
 
     $(document).keydown(function(e) {
       if (e.which === 27) {
-        // swal({
-        //   title: 'Are you sure you wanna restart the game?',
-        //   showCancelButton: true,
-        //   confirmButtonText: 'Yup!'
-        // }).then(function() {
-        //   location.reload();
-        // });
         location.reload();
       }
     });
   }
   startGame();
-
+  $('#bgMusic').trigger('play');
   //allows player to skip turn
   $('.skip').click(function() {
     if (currPlayer === "p1") {
