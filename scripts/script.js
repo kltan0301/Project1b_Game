@@ -135,7 +135,7 @@ $(document).ready(function() {
   var p1Score = 0,
     p2Score = 0;
   var shape;
-  var startMin = 2,
+  var startMin = 5,
     startSec = 60;
   var currPlayer = "p1";
   //prepares board based on number of rows, cols and adds listeners
