@@ -10,10 +10,12 @@ h1{
 h3 {
   font-size: 2.5em;
   margin: 20px;
+  color: #d3d3d3;
 }
 h4 {
   font-size: 1.5em;
   margin: 10px;
+  color: #d3d3d3;
 }
 .headerSection {
   width: 100%;
@@ -62,7 +64,6 @@ h4 {
 .player1Section {
   width: 20%;
   height: 100%;
-  /*background-color: rgb(63,63,63);*/
   text-align: center;
 }
 .player2Section {
@@ -84,24 +85,53 @@ h4 {
   width: 450px;
   margin: 5% auto;
 }
-/*.cover {
+.coverOn {
   height: 100%;
-  width: 100%;
-  z-index: 1;
+  width: 20%;
   position: fixed;
+  z-index: 1;
+  top: 0;
+  background-color: rgba(63,63,63,0.6);
+}
+.coverOff {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: -1;
   top: 0;
   background-color: rgba(63,63,63,1);
-}*/
-.skip {
+}
+button {
   background: none;
-  border: 2px solid black;
+  border: 2px solid #d3d3d3;
   margin: 0 auto;
+  color: #d3d3d3;
+}
+.skip {
   font-size: 1.5em;
 }
-button:hover {
+.skip:hover {
   background: black;
   border: 2px solid white;
   color: white;
   margin: 0 auto;
   font-size: 1.5em;
+}
+.startMenu {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  height: 110%;
+  width: 100%;
+  background-color: rgba(63,63,63,1);
+}
+.visibleOff {
+  display: none;
+}
+.screenText{
+  color: white;
+  margin-top: 10%;
+}
+#timer {
+  color: black;
 }

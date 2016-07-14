@@ -14,8 +14,8 @@ var Shape = function() {
     }
   }, {
     shape: "vertLine2",
-    //emerald
-    color: "#2ECC71",
+    //indigo
+    color: "#496AC5",
     coord: [
       [0, 0],
       [0, 1]
@@ -66,8 +66,8 @@ var Shape = function() {
     }
   }, {
     shape: "square9",
-    //asphalt
-    color: "#34495E",
+    //green
+    color: "#92F22A",
     coord: [
       [0, 0],
       [0, 1],
@@ -118,7 +118,7 @@ var Shape = function() {
   this.randShapeIndex = Math.floor(Math.random() * this.shapeColArr.length);
   this.genShape();
 };
-
+//function to generate a random shape
 Shape.prototype.genShape = function() {
   this.shapeAttr = this.shapeColArr[this.randShapeIndex];
 };
@@ -138,7 +138,7 @@ $(document).ready(function() {
   var startMin = 2,
     startSec = 60;
   var currPlayer = "p1";
-
+  //prepares board based on number of rows, cols and adds listeners
   function prepareBoard() {
     //create board
     for (var boardRow = 0; boardRow < ttlRows; boardRow++) {
@@ -155,11 +155,10 @@ $(document).ready(function() {
     $('.droppable').droppable({
       //when mouse pointer overlaps droppable element
       tolerance: "pointer",
-      revert: false,
+      // revert: false,
       drop: function(event, ui) {
         //retrieve filled squares of piece
         var piece = $('.pcSquare.filled.' + currPlayer);
-        console.log(piece.length);
         var pcColor = piece.first().css('background-color');
         //get ending coordinates
         getEndingCoord($(this));
@@ -184,10 +183,10 @@ $(document).ready(function() {
           //updates score if player completes row/col
           var turnScore = horzFillCheck() + vertFillCheck();
           if (turnScore > 0) {
-            if(currPlayer === "p1"){
+            if (currPlayer === "p1") {
               p1Score += turnScore;
               $('.player1').text("Score: " + p1Score);
-            }else{
+            } else {
               p2Score += turnScore;
               $('.player2').text("Score: " + p2Score);
             }
@@ -201,6 +200,16 @@ $(document).ready(function() {
         switchTurn();
         console.log("curr turn: " + currPlayer);
       }
+    });
+    //add clickable listener for cover on
+    $('.coverOn').on('click', function() {
+      // alert("Sorry, it isin't your turn yet!");
+      swal({
+        title: 'Not your turn yet!',
+        confirmButtonText: 'Darn, alright',
+        width: 300,
+        timer: 2000
+      });
     });
   }
   //the coordinates of the piece where the player clicked
@@ -216,9 +225,9 @@ $(document).ready(function() {
   function generateNewPiece(player) {
     var staticContainer = "";
     //checks which player before appending to container
-    if(player == "p1"){
+    if (player == "p1") {
       staticContainer = $('.staticContainer');
-    }else{
+    } else {
       staticContainer = $('.staticContainer2');
     }
     //generate new shape object
@@ -360,40 +369,93 @@ $(document).ready(function() {
       }
     }, 1000);
   }
-  function switchTurn(){
-    if(currPlayer === "p1"){
+  //switch cover for player section
+  function switchTurn() {
+    if (currPlayer === "p1") {
       currPlayer = "p2";
-    }else{
+      $('.player2Section .coverOn').attr('class', 'coverOff');
+      $('.player1Section .coverOff').attr('class', 'coverOn');
+    } else {
       currPlayer = "p1";
+      $('.player1Section .coverOn').attr('class', 'coverOff');
+      $('.player2Section .coverOff').attr('class', 'coverOn');
+    }
+    if ($('.coverOn').onclick === undefined) {
+      $('.coverOn').on('click', function() {
+        swal({
+          title: 'Not your turn yet!',
+          confirmButtonText: 'Darn, alright',
+          width: 300,
+          timer: 2000
+        });
+      });
     }
   }
 
-  //prepare the board
-  prepareBoard();
-  // generateNewPiece() for first play;
-  generateNewPiece("p1");
-  generateNewPiece("p2");
+  function checkExitCommand() {
 
-  startTimer(startMin, 60);
+  }
+  var firstTurn = true;
+  //create new startscreen
+  function startGame() {
+    $(document).keydown(function(e) {
+      if (e.which === 32 && firstTurn) {
+        $('.startMenu').addClass('visibleOff');
+        //prepare the board
+        prepareBoard();
+        // generateNewPiece() for first play;
+        generateNewPiece("p1");
+        generateNewPiece("p2");
 
-  //Ends the game after time passes
-  setTimeout(function(){
-    $('#sec').text("00");
-    if(p1Score > p2Score){
-      alert("P1 wins!");
-    }else if(p1Score < p2Score){
-      alert("P2 wins!");
-    }else{
-      alert("It's a draw!");
-    }
-    location.reload();
-  },startMin*60*1000);
+        startTimer(startMin, 60);
+
+        //Returns winner when time runs out
+        setTimeout(function() {
+          $('#sec').text("00");
+          var winner;
+          if (p1Score > p2Score) {
+            winner = "Player 1 has won!";
+          } else if (p1Score < p2Score) {
+            winner = "Player 2 has won!";
+          } else {
+            winner = "It's a draw!";
+          }
+
+          swal({
+            title: winner,
+            background: '#FFDE29',
+            width: 300,
+            confirmButtonText: 'Restart Game',
+            allowOutsideClick: false
+          }).then(function() {
+            location.reload();
+          });
+        }, startMin * 60 * 1000);
+
+        firstTurn = false;
+      }
+    });
+
+    $(document).keydown(function(e) {
+      if (e.which === 27) {
+        // swal({
+        //   title: 'Are you sure you wanna restart the game?',
+        //   showCancelButton: true,
+        //   confirmButtonText: 'Yup!'
+        // }).then(function() {
+        //   location.reload();
+        // });
+        location.reload();
+      }
+    });
+  }
+  startGame();
 
   //allows player to skip turn
-  $('.skip').click(function(){
-    if(currPlayer === "p1"){
+  $('.skip').click(function() {
+    if (currPlayer === "p1") {
       $('.player1Section .staticContainer .pieceContainer').remove();
-    }else{
+    } else {
       $('.player2Section .staticContainer2 .pieceContainer').remove();
     }
     generateNewPiece(currPlayer);
