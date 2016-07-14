@@ -1,4 +1,4 @@
-h1, h3, h4 {
+h1, h3, h4, button {
   font-family: 'Oswald', sans-serif;
   text-align: center;
 }
@@ -62,16 +62,19 @@ h4 {
 .player1Section {
   width: 20%;
   height: 100%;
+  /*background-color: rgb(63,63,63);*/
+  text-align: center;
 }
 .player2Section {
   width: 20%;
   height: 100%;
+  text-align: center;
 }
 .boardSection {
   width: 59.3%;
   height: 100%;
 }
-.staticContainer {
+.staticContainer, .staticContainer2{
   height: 230px;
   width: 230px;
   margin: 15% auto;
@@ -80,4 +83,25 @@ h4 {
   height: 450px;
   width: 450px;
   margin: 5% auto;
+}
+/*.cover {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  background-color: rgba(63,63,63,1);
+}*/
+.skip {
+  background: none;
+  border: 2px solid black;
+  margin: 0 auto;
+  font-size: 1.5em;
+}
+button:hover {
+  background: black;
+  border: 2px solid white;
+  color: white;
+  margin: 0 auto;
+  font-size: 1.5em;
 }

@@ -128,15 +128,16 @@ $(document).ready(function() {
   var startingCoord = [0, 0];
   var endingCoord = [0, 0];
   var diffCoords = [0, 0];
-  var staticContainer = $('.staticContainer');
+  // var staticContainer = $('.staticContainer');
   var defaultCol = 'rgb(236, 240, 241)';
   var ttlRows = 10;
   var ttlCols = 10;
   var p1Score = 0,
     p2Score = 0;
-  var orgPosX, orgPosY, shape;
+  var shape;
   var startMin = 2,
     startSec = 60;
+  var currPlayer = "p1";
 
   function prepareBoard() {
     //create board
@@ -157,7 +158,8 @@ $(document).ready(function() {
       revert: false,
       drop: function(event, ui) {
         //retrieve filled squares of piece
-        var piece = $('.pcSquare.filled');
+        var piece = $('.pcSquare.filled.' + currPlayer);
+        console.log(piece.length);
         var pcColor = piece.first().css('background-color');
         //get ending coordinates
         getEndingCoord($(this));
@@ -177,13 +179,18 @@ $(document).ready(function() {
             $('.boardSquare[data-xcoord=' + corrX + '][data-ycoord=' + corrY + ']').addClass('filled').css("background-color", pcColor);
           });
           ui.helper.remove();
-          generateNewPiece();
+          generateNewPiece(currPlayer);
 
           //updates score if player completes row/col
           var turnScore = horzFillCheck() + vertFillCheck();
           if (turnScore > 0) {
-            p1Score += turnScore;
-            $('.player1').text("Score: " + p1Score);
+            if(currPlayer === "p1"){
+              p1Score += turnScore;
+              $('.player1').text("Score: " + p1Score);
+            }else{
+              p2Score += turnScore;
+              $('.player2').text("Score: " + p2Score);
+            }
           }
         } else {
           $('.pieceContainer').css({
@@ -191,6 +198,8 @@ $(document).ready(function() {
             top: 30
           });
         }
+        switchTurn();
+        console.log("curr turn: " + currPlayer);
       }
     });
   }
@@ -200,10 +209,18 @@ $(document).ready(function() {
       var x = $(this).data("xcoord");
       var y = $(this).data("ycoord");
       startingCoord = [x, y];
+      console.log("GetstartingCoord:" + startingCoord[0] + "," + startingCoord[1]);
     });
   }
   //function to create new draggable piece
-  function generateNewPiece() {
+  function generateNewPiece(player) {
+    var staticContainer = "";
+    //checks which player before appending to container
+    if(player == "p1"){
+      staticContainer = $('.staticContainer');
+    }else{
+      staticContainer = $('.staticContainer2');
+    }
     //generate new shape object
     shape = new Shape();
     var pieceAttr = shape.shapeAttr;
@@ -214,7 +231,7 @@ $(document).ready(function() {
     for (var row = 0; row < 5; row++) {
       for (var col = 0; col < 5; col++) {
         var piece = $('<div>').attr({
-          class: 'pcSquare empty',
+          class: 'pcSquare empty ' + player,
           'data-xCoord': col,
           "data-yCoord": row
         });
@@ -226,31 +243,30 @@ $(document).ready(function() {
       var xCoordinate = pieceAttr.coord[i][0] + pieceAttr.startPoint.x;
       var yCoordinate = pieceAttr.coord[i][1] + pieceAttr.startPoint.y;
       var square = pieceContainer.find('[data-xCoord=' + xCoordinate + '][data-yCoord=' + yCoordinate + ']');
-      square.css('background', color).attr('class', 'pcSquare filled');
+      square.css('background', color).attr('class', 'pcSquare filled ' + player);
     }
     staticContainer.append(pieceContainer);
     //add draggable functionality on pieces
     $('.draggable').draggable({
       cursor: 'move',
-      // helper:'clone',
       revert: "invalid"
     });
     //add mouse down listener to find out where coordinates player is clicking on the piece
     getStartingCoord();
-    orgPosX = $('.pieceContainer').offset().left;
-    orgPosY = $('.pieceContainer').offset().top;
   }
   //the coordinates of the clicked position on the board
   function getEndingCoord(obj) {
     var x = obj.data("xcoord");
     var y = obj.data("ycoord");
     endingCoord = [x, y];
+    console.log("Inside get ending coord: " + endingCoord[0] + "," + endingCoord[1]);
   }
   //difference between the points
   function getDifference() {
     var diffX = endingCoord[0] - startingCoord[0];
     var diffY = endingCoord[1] - startingCoord[1];
     diffCoords = [diffX, diffY];
+    console.log(diffCoords);
   }
   //function to clear off all pieces in row/col
   function clearCells(type, index) {
@@ -321,7 +337,6 @@ $(document).ready(function() {
     setTimeout(function() {
       min--;
       $('#min').text("0" + min);
-
     }, 1000);
 
     //update the time every second
@@ -345,19 +360,43 @@ $(document).ready(function() {
       }
     }, 1000);
   }
-  //load start screen
+  function switchTurn(){
+    if(currPlayer === "p1"){
+      currPlayer = "p2";
+    }else{
+      currPlayer = "p1";
+    }
+  }
 
   //prepare the board
   prepareBoard();
   // generateNewPiece() for first play;
-  generateNewPiece();
+  generateNewPiece("p1");
+  generateNewPiece("p2");
 
   startTimer(startMin, 60);
 
   //Ends the game after time passes
   setTimeout(function(){
     $('#sec').text("00");
-    alert("game over!");
+    if(p1Score > p2Score){
+      alert("P1 wins!");
+    }else if(p1Score < p2Score){
+      alert("P2 wins!");
+    }else{
+      alert("It's a draw!");
+    }
     location.reload();
   },startMin*60*1000);
+
+  //allows player to skip turn
+  $('.skip').click(function(){
+    if(currPlayer === "p1"){
+      $('.player1Section .staticContainer .pieceContainer').remove();
+    }else{
+      $('.player2Section .staticContainer2 .pieceContainer').remove();
+    }
+    generateNewPiece(currPlayer);
+    switchTurn();
+  });
 });
