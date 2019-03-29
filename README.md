@@ -16,9 +16,9 @@ Objective: Score as many points within the time limit
  2. Fill the remaining empty squares in a row/column to earn a point
 
 ## External Libraries / Frameworks
-* [JQuery UI] (https://jqueryui.com/)
-* [JQuery] (https://jquery.com/)
-* [SweetAlert2] (https://limonte.github.io/sweetalert2/)
+* [JQuery UI](https://jqueryui.com/)
+* [JQuery](https://jquery.com/)
+* [SweetAlert2](https://limonte.github.io/sweetalert2/)
 
 ## References
 <https://github.com/stephaniecoleman/1010>
